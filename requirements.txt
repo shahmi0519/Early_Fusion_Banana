@@ -1,0 +1,6 @@
+pandas
+streamlit
+torch
+efficientnet_pytorch
+Pillow
+torchvision
