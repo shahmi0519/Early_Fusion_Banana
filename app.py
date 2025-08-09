@@ -79,7 +79,7 @@ def load_model():
     fusion_model = EarlyFusionModel(cnn_extractor, sensor_feat, img_dim, sensor_dim, num_classes=NUM_CLASSES).to(DEVICE)
 
     # Load the fusion model weights from your single checkpoint
-    fusion_model.load_state_dict(torch.load("../banana_early_fusion_model.pth", map_location=DEVICE))
+    fusion_model.load_state_dict(torch.load("banana_early_fusion_model.pth", map_location=DEVICE))
     # model_path = os.path.join(current_dir, '..', 'models', 'banana_early_fusion_model.pth')
 
     fusion_model.eval()
@@ -128,3 +128,4 @@ if st.button("Predict"):
 
         class_names = {0: "Unripe", 1: "Ripe", 2: "Rotten"}
         st.success(f"Prediction: {class_names.get(pred_class, 'Unknown')}")
+
