@@ -4,3 +4,5 @@ torch
 efficientnet_pytorch
 Pillow
 torchvision
+joblib
+numpy
