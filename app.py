@@ -91,7 +91,7 @@ def load_model():
     img_dim, sensor_dim = infer_feature_dims(cnn_extractor, sensor_feat, DEVICE)
 
     fusion_model = EarlyFusionModel(cnn_extractor, sensor_feat, img_dim, sensor_dim, num_classes=NUM_CLASSES).to(DEVICE)
-    fusion_model.load_state_dict(torch.load("banana_early_fusion_model_September.pth", map_location=DEVICE))
+    fusion_model.load_state_dict(torch.load("banana_early_fusion_model_September.pth", map_location=DEVICE,weights_only=False))
     fusion_model.eval()
     return fusion_model
 
@@ -206,3 +206,4 @@ if st.button("Predict Ripeness"):
         
     else:
         st.error("Please upload an image.")
+
