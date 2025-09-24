@@ -302,6 +302,29 @@ def infer_feature_dims(cnn_model, sensor_model, device):
     return img_dim, sensor_dim
 
 # --- Load Models ---
+# @st.cache_resource(show_spinner=False)
+# def load_model():
+#     # CNN
+#     cnn_extractor = EfficientFeatureExtractor(pretrained=False).to(DEVICE)
+#     cnn_checkpoint = torch.load("Banana_CNN.pth", map_location=DEVICE)
+#     if isinstance(cnn_checkpoint, dict) and 'model_state_dict' in cnn_checkpoint:
+#         cnn_extractor.base.load_state_dict(cnn_checkpoint['model_state_dict'], strict=False)
+#     else:
+#         cnn_extractor.base.load_state_dict(cnn_checkpoint, strict=False)
+
+#     # Sensor model (downloaded from Google Drive)
+#     sensor_feat = SensorNetFeat(input_dim=4, hidden_dim=64, output_dim=128).to(DEVICE)
+#     sensor_checkpoint = torch.load(SENSOR_MODEL_FILE, map_location=DEVICE)
+#     sensor_feat.load_state_dict(sensor_checkpoint, strict=False)
+
+#     img_dim, sensor_dim = infer_feature_dims(cnn_extractor, sensor_feat, DEVICE)
+
+#     # Fusion model
+#     fusion_model = EarlyFusionModel(cnn_extractor, sensor_feat, img_dim, sensor_dim, num_classes=NUM_CLASSES).to(DEVICE)
+#     fusion_model.load_state_dict(torch.load("banana_early_fusion_model_September.pth", map_location=DEVICE, weights_only=False))
+#     fusion_model.eval()
+#     return fusion_model
+
 @st.cache_resource(show_spinner=False)
 def load_model():
     # CNN
@@ -312,18 +335,23 @@ def load_model():
     else:
         cnn_extractor.base.load_state_dict(cnn_checkpoint, strict=False)
 
-    # Sensor model (downloaded from Google Drive)
+    # Sensor model
     sensor_feat = SensorNetFeat(input_dim=4, hidden_dim=64, output_dim=128).to(DEVICE)
     sensor_checkpoint = torch.load(SENSOR_MODEL_FILE, map_location=DEVICE)
     sensor_feat.load_state_dict(sensor_checkpoint, strict=False)
 
+    # Infer feature dimensions
     img_dim, sensor_dim = infer_feature_dims(cnn_extractor, sensor_feat, DEVICE)
 
     # Fusion model
     fusion_model = EarlyFusionModel(cnn_extractor, sensor_feat, img_dim, sensor_dim, num_classes=NUM_CLASSES).to(DEVICE)
-    fusion_model.load_state_dict(torch.load("banana_early_fusion_model_September.pth", map_location=DEVICE, weights_only=False))
+    
+    # Load saved state_dict
+    fusion_model.load_state_dict(torch.load("banana_early_fusion_model_September.pth", map_location=DEVICE))
     fusion_model.eval()
     return fusion_model
+
+
 
 @st.cache_resource(show_spinner=False)
 def load_scaler():
@@ -405,3 +433,4 @@ if st.button("Predict Ripeness"):
         st.info(f"Estimated Date When It Will Rotten: {rotten_date_str}")
     else:
         st.error("Please upload an image.")
+
