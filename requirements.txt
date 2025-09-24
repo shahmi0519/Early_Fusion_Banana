@@ -7,3 +7,4 @@ torchvision
 joblib
 numpy
 scikit-learn
+gdown
