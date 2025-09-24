@@ -1,10 +1,12 @@
 pandas
 streamlit
-torch
+
 efficientnet_pytorch
 Pillow
-torchvision
+
 joblib
 numpy
 scikit-learn
 gdown
+torch==2.8.0
+torchvision==0.23.0
